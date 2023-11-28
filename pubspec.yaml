@@ -7,6 +7,7 @@ environment:
   sdk: '>=3.1.5 <4.0.0'
 
 dependencies:
+  card_swiper: ^3.0.1
   dio: ^5.3.4
   flutter:
     sdk: flutter
@@ -15,7 +16,7 @@ dependencies:
   go_router: ^12.1.1
 
 dev_dependencies:
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.1
   flutter_test:
     sdk: flutter
 
