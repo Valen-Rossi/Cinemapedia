@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
@@ -37,6 +38,8 @@ class _Slide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final colorsTheme = Theme.of(context).colorScheme;
+
     final decoration = BoxDecoration(
       borderRadius: BorderRadius.circular(20),
       boxShadow: const [
@@ -57,7 +60,15 @@ class _Slide extends StatelessWidget {
           child: Image.network(
             movie.backdropPath,
             fit: BoxFit.cover,
-            loadingBuilder: ,
+            loadingBuilder: (context, child, loadingProgress){
+              if (loadingProgress!= null) {
+                return Center(child: CircularProgressIndicator(
+                  color: colorsTheme.primary,
+                  backgroundColor: colorsTheme.secondary,
+                ));
+              }
+              return FadeIn(child: child);
+            },
           )
         )
       ),
