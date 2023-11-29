@@ -75,6 +75,7 @@ class _Slide extends StatelessWidget {
             loadingBuilder: (context, child, loadingProgress){
               if (loadingProgress!= null) {
                 return Center(child: CircularProgressIndicator(
+                  strokeWidth: 2,
                   color: colorsTheme.primary,
                   backgroundColor: colorsTheme.secondary,
                 ));
