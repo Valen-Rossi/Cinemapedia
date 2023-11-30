@@ -43,22 +43,61 @@ class _HomeViewState extends ConsumerState<_HomeView> {
 
     // if (nowPlayingMovies.isEmpty) const Center(child: CircularProgressIndicator());
 
-    return Column(
-      children: [
+    return CustomScrollView(
+      slivers: [
 
-        const CustomAppbar(),
-      
-        MoviesSlideshow(movies: slideshowMovies),
-
-        MovieHorizontalListview(
-          movies: nowPlayingMovies,
-          title: 'En cines',  
-          subTitle: 'Miércoles 29',
-          loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+        const SliverAppBar(
+          floating: true,
+          // snap: true,
+          flexibleSpace: FlexibleSpaceBar(),
+          title: CustomAppbar(),
         ),
-      //  MoviesSlideshow(movies: nowPlayingMovies.isNotEmpty ?nowPlayingMovies.sublist(0,6):nowPlayingMovies),
 
-      ],
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index){
+              return Column(
+                children: [
+              
+                  MoviesSlideshow(movies: slideshowMovies),
+              
+                  MovieHorizontalListview(
+                    movies: nowPlayingMovies,
+                    title: 'En cines',  
+                    subTitle: 'Miércoles 29',
+                    loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+                  ),
+              
+                  MovieHorizontalListview(
+                    movies: nowPlayingMovies,
+                    title: 'Próximamente',  
+                    subTitle: 'En este mes',
+                    loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+                  ),
+              
+                  MovieHorizontalListview(
+                    movies: nowPlayingMovies,
+                    title: 'Populares',  
+                    loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+                  ),
+                  
+                  MovieHorizontalListview(
+                    movies: nowPlayingMovies,
+                    title: 'Mejor calificadas', 
+                    subTitle: 'Último mes',
+                    loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+                  ),
+              
+                  const SizedBox(height: 27),
+
+                ],
+              );
+            },
+            childCount: 1,
+          ) 
+        )
+
+      ]
     );
   }
 }
