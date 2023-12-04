@@ -1,7 +1,8 @@
-import 'package:cinemapedia/domain/entities/actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:animate_do/animate_do.dart';
 
+import 'package:cinemapedia/domain/entities/actor.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:cinemapedia/presentation/providers/providers.dart';
 
@@ -156,37 +157,39 @@ class _ActorsByMovie extends ConsumerWidget {
         itemBuilder: (context, index){
           final actor= actors[index];
 
-          return Container(
-            padding: const EdgeInsets.all(8),
-            width: 135,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                
-                //Photo
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.network(
-                    actor.profilePath,
-                    height: 180,
-                    width: 135,
-                    fit: BoxFit.cover,
+          return FadeInRight(
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              width: 135,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  
+                  //Photo
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.network(
+                      actor.profilePath,
+                      height: 180,
+                      width: 135,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-
-                const SizedBox(height: 5),
-                
-                //Name
-                Text(actor.name, maxLines: 2),
-
-                Text(
-                  actor.character ?? '', 
-                  maxLines: 2,
-                  style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
-                ),
-
-
-              ],
+            
+                  const SizedBox(height: 5),
+                  
+                  //Name
+                  Text(actor.name, maxLines: 2),
+            
+                  Text(
+                    actor.character ?? '', 
+                    maxLines: 2,
+                    style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
+                  ),
+            
+            
+                ],
+              ),
             ),
           );
 
@@ -244,6 +247,10 @@ class _CustomBackground extends StatelessWidget {
           child: Image.network(
             movie.posterPath,
             fit: BoxFit.cover,
+            loadingBuilder: (context, child, loadingProgress){
+              if (loadingProgress!=null) return const SizedBox();
+              return FadeIn(child: child);
+            },
           ),
         ),
     
