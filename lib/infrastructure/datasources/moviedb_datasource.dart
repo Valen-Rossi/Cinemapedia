@@ -12,7 +12,7 @@ import 'package:cinemapedia/domain/entities/movie.dart';
 class MovieDbDatasource extends IMoviesDataSource {
   
     final dio= Dio(BaseOptions(
-      baseUrl: 'https://api.themoviedb.org/3',
+      baseUrl: 'https://api.themoviedb.org/3/movie',
       queryParameters: {
         'api_key': Environment.theMovieDbKey,
         'language': 'es-MX',
@@ -35,7 +35,7 @@ class MovieDbDatasource extends IMoviesDataSource {
   @override
   Future<List<Movie>> getNowPlaying({int page = 1}) async{
 
-    final response = await dio.get('/movie/now_playing',
+    final response = await dio.get('/now_playing',
       queryParameters: {
         'page': page
       }
@@ -48,7 +48,7 @@ class MovieDbDatasource extends IMoviesDataSource {
   @override
   Future<List<Movie>> getPopular({int page = 1}) async{
 
-    final response = await dio.get('/movie/popular',
+    final response = await dio.get('/popular',
       queryParameters: {
         'page': page
       }
@@ -60,7 +60,7 @@ class MovieDbDatasource extends IMoviesDataSource {
   
   @override
   Future<List<Movie>> getUpcoming({int page = 1}) async{
-    final response = await dio.get('/movie/upcoming',
+    final response = await dio.get('/upcoming',
       queryParameters: {
         'page': page
       }
@@ -72,7 +72,7 @@ class MovieDbDatasource extends IMoviesDataSource {
   
   @override
   Future<List<Movie>> getTopRated({int page = 1}) async{
-    final response = await dio.get('/movie/top_rated',
+    final response = await dio.get('/top_rated',
       queryParameters: {
         'page': page
       }
@@ -85,7 +85,7 @@ class MovieDbDatasource extends IMoviesDataSource {
 
   @override
   Future<Movie> getMovieById(String id) async{
-    final response = await dio.get('/movie/$id');
+    final response = await dio.get('/$id');
     if(response.statusCode != 200) throw Exception('Movie with id: $id not found');
 
     final movieDetails = MovieDetails.fromJson(response.data);

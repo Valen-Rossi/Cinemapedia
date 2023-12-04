@@ -1,3 +1,4 @@
+import 'package:cinemapedia/domain/entities/actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -27,6 +28,7 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
     super.initState();
 
     ref.read(movieDetailsProvider.notifier).loadMovie(widget.movieId);
+    ref.read(actorsByMovieProvider.notifier).loadActors(widget.movieId);
 
   }
 
@@ -57,6 +59,7 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
 class _MovieDetailsView extends StatelessWidget {
 
   final Movie movie;
+
 
   const _MovieDetailsView({required this.movie});
 
@@ -107,7 +110,7 @@ class _MovieDetailsView extends StatelessWidget {
 
         //Generos de la pelicula
         Padding(
-          padding: EdgeInsets.all(8),
+          padding: const EdgeInsets.all(8),
           child: Wrap(
             children: [
               ...movie.genreIds.map((genre) => Container(
@@ -123,14 +126,77 @@ class _MovieDetailsView extends StatelessWidget {
           ), 
         ),
 
-        //todo: mostrar actores listview
-
-        const SizedBox(height: 100),
+        _ActorsByMovie(movieId: '${movie.id}'),
 
       ],
     );
   }
 }
+
+class _ActorsByMovie extends ConsumerWidget {
+
+  final String movieId;
+
+  const _ActorsByMovie({required this.movieId});
+
+  @override
+  Widget build(BuildContext context, ref) {
+
+    final List<Actor>? actors= ref.watch(actorsByMovieProvider)[movieId];
+    
+    if (actors==null) {
+      return const Center(child: CircularProgressIndicator(strokeWidth: 2));
+    }
+
+    return SizedBox(
+      height: 300,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: actors.length,
+        itemBuilder: (context, index){
+          final actor= actors[index];
+
+          return Container(
+            padding: const EdgeInsets.all(8),
+            width: 135,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                
+                //Photo
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.network(
+                    actor.profilePath,
+                    height: 180,
+                    width: 135,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+
+                const SizedBox(height: 5),
+                
+                //Name
+                Text(actor.name, maxLines: 2),
+
+                Text(
+                  actor.character ?? '', 
+                  maxLines: 2,
+                  style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
+                ),
+
+
+              ],
+            ),
+          );
+
+        }
+      ),
+    );
+  }
+}
+
+
 
 class _CustomSliverAppbar extends StatelessWidget {
 
@@ -150,12 +216,12 @@ class _CustomSliverAppbar extends StatelessWidget {
       expandedHeight: size.height*0.7,
       foregroundColor: Colors.white,
       flexibleSpace: FlexibleSpaceBar(
-        titlePadding: const EdgeInsets.symmetric(horizontal: 17,vertical: 7),
-        title: Text(
-          movie.title, 
-          style: const TextStyle(fontSize: 20),
-          textAlign: TextAlign.start,
-        ),
+        // titlePadding: const EdgeInsets.symmetric(horizontal: 17,vertical: 7),
+        // title: Text(
+        //   movie.title, 
+        //   style: const TextStyle(fontSize: 20),
+        //   textAlign: TextAlign.start,
+        // ),
         background: _CustomBackground(movie: movie),
       ),
     );
