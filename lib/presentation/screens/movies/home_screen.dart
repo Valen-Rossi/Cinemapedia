@@ -73,7 +73,7 @@ class _HomeViewState extends ConsumerState<_HomeView> {
                   MovieHorizontalListview(
                     movies: nowPlayingMovies,
                     title: 'En cines',  
-                    subTitle: 'Sábado 2',
+                    subTitle: '${DateTime.now().day}/${DateTime.now().month}',
                     loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
                   ),
               
