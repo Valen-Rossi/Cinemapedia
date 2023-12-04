@@ -7,6 +7,7 @@ class AppTheme {
   ThemeData getTheme() => ThemeData(
     useMaterial3: true,
     colorSchemeSeed: const Color(0x00941AD2),
+    // brightness: Brightness.dark,
   );
 
 }
