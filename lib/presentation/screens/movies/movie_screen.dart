@@ -185,7 +185,6 @@ class _ActorsByMovie extends ConsumerWidget {
                   style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
                 ),
 
-
               ],
             ),
           );
