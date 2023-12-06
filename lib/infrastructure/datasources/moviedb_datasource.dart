@@ -24,7 +24,6 @@ class MovieDbDatasource extends IMoviesDataSource {
     final movieDbResponse = MovieDbResponse.fromJson(json);
 
     final List<Movie> movies= movieDbResponse.results
-      .where((movieDb) => movieDb.posterPath!='')
       .map((movieDb) => MovieMapper.movieDbToEntity(movieDb)).toList();
 
     return movies;
