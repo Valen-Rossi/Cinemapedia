@@ -44,7 +44,7 @@ final appRouter = GoRouter(
             GoRoute(
               path:'/categories',
               builder: (context, state){
-                return const FavoritesView();
+                return const CategoriesView();
               }
             )
 

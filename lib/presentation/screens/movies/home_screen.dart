@@ -15,9 +15,32 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final location= GoRouter.of(context).location();
+
     return Scaffold(
       body: childView,
-      bottomNavigationBar: CustomBottomNavigation(childView: childView),
+      bottomNavigationBar: location.startsWith('/movie') 
+      ? null 
+      : CustomBottomNavigation(childView: childView),
     );
   }
+}
+
+//eliminar todo esto y la condicion de location en caso de querer otro funcionamiento
+
+extension GoRouterExtension on GoRouter {
+
+  String location() {
+
+    final RouteMatch lastMatch = routerDelegate.currentConfiguration.last;
+
+    final RouteMatchList matchList = lastMatch is ImperativeRouteMatch ? lastMatch.matches : routerDelegate.currentConfiguration;
+
+    final String location = matchList.uri.toString();
+
+    return location;
+
+  }
+
 }
