@@ -4,6 +4,7 @@ import 'package:cinemapedia/domain/repositories/actors_repository.dart';
 
 
 class ActorRepositoryImpl extends IActorsRepository {
+  
   final IActorsDatasource datasource;
 
   ActorRepositoryImpl(this.datasource);

@@ -75,7 +75,7 @@ class _MovieDetailsView extends StatelessWidget {
       children: [
 
         Padding(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 17),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -200,8 +200,16 @@ class _ActorsByMovie extends ConsumerWidget {
 }
 
 
+final isFavoriteProvider= FutureProvider.family.autoDispose((ref, int movieId) {
 
-class _CustomSliverAppbar extends StatelessWidget {
+  final localStorageRepository = ref.watch(localStorageRepositoryProvider);
+  
+  return localStorageRepository.isMovieFavorite(movieId);
+
+});
+
+
+class _CustomSliverAppbar extends ConsumerWidget {
 
   final Movie movie;
 
@@ -210,7 +218,9 @@ class _CustomSliverAppbar extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+
+    final isFavoriteFuture= ref.watch(isFavoriteProvider(movie.id));
 
     final size = MediaQuery.of(context).size;
 
@@ -218,6 +228,24 @@ class _CustomSliverAppbar extends StatelessWidget {
       backgroundColor: Colors.black,
       expandedHeight: size.height*0.7,
       foregroundColor: Colors.white,
+      actions: [
+        IconButton(
+          onPressed: () async{
+
+            await ref.watch(localStorageRepositoryProvider)
+              .toggleFavorite(movie);
+            ref.invalidate(isFavoriteProvider(movie.id));
+
+          }, 
+          icon: isFavoriteFuture.when(
+            loading: () => const CircularProgressIndicator(strokeWidth: 2),
+            data: (data) => data
+            ? ElasticIn(child: const Icon(Icons.favorite_rounded, color: Colors.red))
+            : const Icon(Icons.favorite_border_rounded),
+            error: (_, __) => throw UnimplementedError(), 
+          )
+        )
+      ],
       flexibleSpace: FlexibleSpaceBar(
         // titlePadding: const EdgeInsets.symmetric(horizontal: 17,vertical: 7),
         // title: Text(
@@ -254,38 +282,54 @@ class _CustomBackground extends StatelessWidget {
           ),
         ),
     
-        const SizedBox.expand(
-          child: DecoratedBox(
-            decoration:BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                stops: [0,0.3],
-                colors:[
-                  Colors.black87,
-                  Colors.transparent,
-                ] 
-              )
-            ) 
-          ),
+
+        const _CustomGradient(
+          begin: Alignment.bottomCenter,
+          end: Alignment.center,
         ),
     
-        const SizedBox.expand(
-          child: DecoratedBox(
-            decoration:BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                stops: [0,0.3],
-                colors:[
-                  Colors.black87,
-                  Colors.transparent,
-                ] 
-              )
-            ) 
-          ),
+       const _CustomGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+
+        const _CustomGradient(
+          begin: Alignment.topRight,
+          end: Alignment.centerLeft,
         ),
     
       ],
     );
+  }
+}
+
+
+class _CustomGradient extends StatelessWidget {
+
+  final AlignmentGeometry begin;
+  final AlignmentGeometry end;
+
+  const _CustomGradient({
+    required this.begin, 
+    required this.end, 
+  });
+  
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.expand(
+          child: DecoratedBox(
+            decoration:BoxDecoration(
+              gradient: LinearGradient(
+                begin: begin,
+                end: end,
+                stops: const [0,0.3], 
+                colors: const [
+                  Colors.black87,
+                  Colors.transparent,
+                ],
+              )
+            ) 
+          ),
+        );
   }
 }
