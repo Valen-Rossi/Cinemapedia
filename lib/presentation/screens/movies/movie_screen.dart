@@ -232,8 +232,11 @@ class _CustomSliverAppbar extends ConsumerWidget {
         IconButton(
           onPressed: () async{
 
-            await ref.watch(localStorageRepositoryProvider)
+            // await ref.read(localStorageRepositoryProvider)
+            //   .toggleFavorite(movie);
+            await ref.read(favoriteMoviesProvider.notifier)
               .toggleFavorite(movie);
+
             ref.invalidate(isFavoriteProvider(movie.id));
 
           }, 
